@@ -5,7 +5,7 @@ import {ArticleScheme} from "../types";
 const getArticleData = e.Router()
 
 getArticleData.get('/', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000')
+    console.log('hello')
     read<ArticleScheme>().then((val) => {
         res.json(val)
     })

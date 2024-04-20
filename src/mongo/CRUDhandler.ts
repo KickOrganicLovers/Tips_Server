@@ -19,13 +19,23 @@ export async function create<T extends Document>(data: T, dbName?: string, colle
     }
 }
 
-export async function read<T extends Document>(dbName?: string, collectionName?: string, options?: object) {
+export async function read<T extends Document>(dbName?: string, collectionName?: string,  search_req?: T, options?: object) {
     const D: string = !(dbName == undefined) ? dbName : def_dbName
     const C: string = !(collectionName == undefined) ? collectionName : def_collectionName
+    const search_condition: any = {};
+
+    if (search_req !== undefined) {
+        for (const key in search_req) {
+            if (search_req[key] !== undefined) {
+                search_condition[key] = search_req[key];
+            }
+        }
+    }
+
 
     const client: MongoClient = await MongoClient.connect(uri, options)
     const col: Collection<T> = client.db(D).collection<T>(C)
-    const data: WithId<T>[] = await col.find().toArray()
+    const data: WithId<T>[] = await col.find<WithId<T>>(search_condition).toArray()
     console.log(data)
     console.log(typeof data)
     return data

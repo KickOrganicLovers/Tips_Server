@@ -1,6 +1,7 @@
 import e from "express";
 import {create, read} from "../mongo/CRUDhandler";
 import {UserScheme} from "../types";
+import  bcrypt from 'bcrypt'
 
 const signup = e.Router()
 
@@ -8,7 +9,7 @@ signup.post('/', (req, res) => {
     const data: UserScheme = {
         username: req.body.data.username,
         email: req.body.data.email,
-        password: req.body.data.password
+        password: req.body.data.email
     }
     if(req.body.from === 'checkIfItAlreadyExists'){
         read<UserScheme>('lychee_db', 'user_data', {username: data.username, email: data.email, password: data.password})
@@ -16,6 +17,8 @@ signup.post('/', (req, res) => {
                 res.json({isExists: val[0] !== undefined})
             })
     }else if(req.body.from === 'signup'){
+        const saltRounds = 10
+        data.password = bcrypt.hashSync(req.body.data.password, saltRounds)
         read<UserScheme>('lychee_db', 'user_data', {username: data.username, email: undefined, password: undefined})
             .then((val0) => {
                 if(val0[0] === undefined){

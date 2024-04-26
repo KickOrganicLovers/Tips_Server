@@ -1,16 +1,17 @@
 import e from "express";
 import {read} from "../mongo/CRUDhandler";
 import {UserScheme} from "../types";
+import bcrypt from "bcrypt";
 
 const login = e.Router()
 
 login.post('/',(req, res) => {
+    const saltRounds = 10
     if(req.body.email !== undefined){
         read<UserScheme>('lychee_db', 'user_data', {username: undefined, email: req.body.email, password: undefined})
             .then((val) => {
-                console.log(val)
-                if(val[0] !== undefined){
-                    if(val[0].password === req.body.password){
+                if(val[0] !== undefined && val[0].password !== undefined){
+                    if(bcrypt.compareSync(req.body.password, val[0].password)){
                         res.json({
                             isLoggedIn: true,
                             loginStatus: {

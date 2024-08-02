@@ -7,7 +7,7 @@ import signup from "./router/signup";
 import editUserProfile from "./router/editUserProfile";
 
 const server: e.Express = e()
-const port: number = 5000
+const port: number = 5005
 
 server.use(cors())
 

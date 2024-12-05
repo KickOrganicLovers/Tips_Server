@@ -3,7 +3,7 @@ import {Document} from "mongodb";
 import {Mongo_Info} from "../env";
 
 const uri: string = Mongo_Info.uri
-const def_dbName: string = Mongo_Info.uri
+const def_dbName: string = Mongo_Info.dbName
 const def_collectionName: string = 'article_data'
 export async function create<T extends Document>(data: T, dbName?: string, collectionName?: string, options?: object) : Promise<boolean> {
     if(!data) {
